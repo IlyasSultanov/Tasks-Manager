@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Проверка подключения к БД
+    # Connecting to the database 
     try:
         async with async_engine.connect() as conn:
             await conn.execute(text("SELECT 1"))
@@ -28,7 +28,7 @@ async def lifespan(app: FastAPI):
         logger.error("❌ Ошибка подключения к БД: %s", e)
         raise RuntimeError("Не удалось подключиться к БД") from e
 
-    # Создание таблиц
+    # Create table
     try:
         async with async_engine.begin() as conn:
             await conn.run_sync(BaseModel.metadata.create_all)
